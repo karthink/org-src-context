@@ -156,8 +156,12 @@ Choose between Eglot and LSP-mode."
            (format "Cannot create directory \"%s\", please use the :mkdirp header arg." fnd))))
       
       (setq buffer-file-name (concat (temporary-file-directory) tangle-file))
+      (pcase org-src-context-lsp-command
+	('eglot--maybe-activate-editing-mode
+	 (require 'eglot)
       (when-let ((current-server (eglot-current-server)))
-        (funcall org-src-context-lsp-command)))))
+	   (funcall org-src-context-lsp-command)))
+	('lsp-deferred (funcall org-src-context-lsp-command))))))
 
 (define-minor-mode org-src-context-mode
   "Toggle Org-Src-Context mode. When turned on, you can start persistent
