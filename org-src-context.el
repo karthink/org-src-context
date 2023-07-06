@@ -105,10 +105,13 @@ Choose between Eglot and LSP-mode."
                                           'read-only t
                                           'font-lock-face 'org-src-context-read-only)
                    do (insert code))
-          
+
+	  (set-marker-insertion-type org-src-context--before-block-marker nil)
+
           ;; Code blocks after the current one
           (cl-loop initially do (goto-char (marker-position org-src-context--after-block-marker))
                    for block in (cdr extra-blocks)
+
                    for code = (propertize (concat "\n" (nth 6 block)
                                                   (propertize "\n" 'rear-nonsticky t))
                                           'read-only t
@@ -156,8 +159,12 @@ Choose between Eglot and LSP-mode."
            (format "Cannot create directory \"%s\", please use the :mkdirp header arg." fnd))))
       
       (setq buffer-file-name (concat (temporary-file-directory) tangle-file))
-      (when-let ((current-server (eglot-current-server)))
-        (funcall org-src-context-lsp-command)))))
+      (pcase org-src-context-lsp-command
+	('eglot--maybe-activate-editing-mode
+	 (require 'eglot)
+	 (when-let ((current-server (eglot-current-server)))
+	   (funcall org-src-context-lsp-command)))
+	('lsp-deferred (funcall org-src-context-lsp-command))))))
 
 (define-minor-mode org-src-context-mode
   "Toggle Org-Src-Context mode. When turned on, you can start persistent
