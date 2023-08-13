@@ -72,7 +72,7 @@ Choose between Eglot and LSP-mode."
             (this-block-data
              (save-excursion
                (goto-char
-                (org-element-property :begin (org-element-at-point)))
+                (org-element-property :post-affiliated (org-element-at-point)))
                (car (org-babel-tangle-single-block 1 t))))
             (tangle-file (car this-block-data))
             (this-block (cadr this-block-data))
