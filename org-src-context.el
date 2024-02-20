@@ -166,6 +166,7 @@ Choose between Eglot and LSP-mode."
 	   (funcall org-src-context-lsp-command)))
 	('lsp-deferred (funcall org-src-context-lsp-command))))))
 
+;;;###autoload
 (define-minor-mode org-src-context-mode
   "Toggle Org-Src-Context mode. When turned on, you can start persistent
 LSP connections using Eglot in org-src buffers.
